@@ -1,3 +1,6 @@
+# crypto-tracker
+
+> Vue.js Project PWA
 
 ## Build Setup
 
