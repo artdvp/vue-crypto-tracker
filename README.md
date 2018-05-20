@@ -72,3 +72,7 @@ install pusher-js
 ```bash
 $ npm install --save pusher-js
 ```
+
+```bash
+$ npm i serve -g
+```
