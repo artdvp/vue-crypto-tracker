@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
@@ -23,6 +23,16 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 ## Crytocurrency Tracker
 
 from : [source](https://medium.com/js-dojo/build-a-cryptocurrency-tracker-using-vue-js-f9b3642823f8)
+
+solve :
+
+- [update interval in vue](https://forum.vuejs.org/t/updating-text-with-setinterval-not-working/29820/4)
+- [how to use setInterval in vue component](https://stackoverflow.com/questions/43335477/how-to-use-setinterval-in-vue-component)
+
+transition
+
+- [How do I add CSS animations when updating a value with vue.js?](https://stackoverflow.com/questions/42537359/how-do-i-add-css-animations-when-updating-a-value-with-vue-js)
+- https://codepen.io/CSWApps/pen/mAazbX
 
 ### First Step
 
@@ -59,12 +69,12 @@ config.live.js
 
 ```js
 module.exports = {
-    appId: 'PUSHER_APP_ID',
-    key: 'PUSHER_APP_KEY',
-    secret: 'PUSHER_APP_SECRET',
-    cluster: 'PUSHER_APP_CLUSTER',
-    encrypted: true
-}
+  appId: "PUSHER_APP_ID",
+  key: "PUSHER_APP_KEY",
+  secret: "PUSHER_APP_SECRET",
+  cluster: "PUSHER_APP_CLUSTER",
+  encrypted: true
+};
 ```
 
 install pusher-js

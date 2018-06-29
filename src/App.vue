@@ -36,7 +36,6 @@ import Previous from "./components/Previous.vue";
 export default {
   name: "app",
   components: {
-    //Intro,
     Current,
     Previous
   },
@@ -110,7 +109,6 @@ export default {
     },
     _fetchNewData: function() {
       //let self = this;
-
       setInterval(() => {
         if (!navigator.onLine) {
           this.currentCurrency = {
@@ -135,7 +133,6 @@ export default {
           this._fetchDataForToday();
 
           // Pusher.logToConsole = true;
-
           // let pusher = new Pusher("94a8339d225401384224", {
           //   cluster: "ap1",
           //   encrypted: true
@@ -151,30 +148,21 @@ export default {
           // });
         }
       }, 5000);
-      //console.log("update");
-      //console.log(this.symbol);
     },
     _switchSymbol: function(val) {
       if (val == "฿") {
         this.symbol = "฿";
         this.moneyCurr = "THB";
-        this.isActiveClass = true;
       } else {
         this.symbol = "$";
         this.moneyCurr = "USD";
-        this.isActiveClass = false;
       }
+      this.isActiveClass = !this.isActiveClass;
       this._fetchNewData();
     }
   },
   created() {
-    // update from Interval
     this._fetchNewData();
-    //console.log("created");
-    //this.timer = setInterval(this._fetchNewData, 5000);
-  },
-  beforeDestroy() {
-    //clearInterval(this.timer);
   }
 };
 </script>
