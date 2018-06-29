@@ -50,7 +50,7 @@ export default {
         fourDays: {},
         fiveDays: {}
       },
-      timer: "",
+      timer: null,
       moneyCurr: "THB",
       symbol: "฿",
       isActiveClass: true
@@ -60,7 +60,9 @@ export default {
     _fetchDataForToday: function() {
       var myCur = this.moneyCurr;
 
-      let url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,EVX&tsyms=${this.moneyCurr}`;
+      let url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,EVX&tsyms=${
+        this.moneyCurr
+      }`;
       this.axios.get(url).then(res => {
         localStorage.setItem(
           "BTC",
@@ -77,19 +79,19 @@ export default {
       });
     },
     _fetchDataFor: function(key, daysAgo) {
-      
       let date = this.$moment()
         .subtract(daysAgo, "days")
         .unix();
       let fetch = (curr, date) =>
         this.axios.get(
-          `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${curr}&tsyms=${this.moneyCurr}&ts=${date}`
+          `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${curr}&tsyms=${
+            this.moneyCurr
+          }&ts=${date}`
         );
       var myCurr = this.moneyCurr;
       this.axios
         .all([fetch("BTC", date), fetch("ETH", date), fetch("EVX", date)])
         .then(
-          
           this.axios.spread((BTC, ETH, EVX) => {
             this.previousCurrency[key] = {
               BTC: BTC.data.BTC[myCurr],
@@ -107,47 +109,50 @@ export default {
         );
     },
     _fetchNewData: function() {
-      let self = this;
+      //let self = this;
+
+      setInterval(() => {
+        if (!navigator.onLine) {
+          this.currentCurrency = {
+            BTC: localStorage.getItem("BTC"),
+            ETH: localStorage.getItem("ETH"),
+            EVX: localStorage.getItem("EVX")
+          };
+
+          this.previousCurrency = {
+            yesterday: JSON.parse(localStorage.getItem("yesterdayPrices")),
+            twoDays: JSON.parse(localStorage.getItem("twoDaysPrices")),
+            threeDays: JSON.parse(localStorage.getItem("threeDaysPrices")),
+            fourDays: JSON.parse(localStorage.getItem("fourDaysPrices")),
+            fiveDays: JSON.parse(localStorage.getItem("fiveDaysPrices"))
+          };
+        } else {
+          this._fetchDataFor("yesterday", 1);
+          this._fetchDataFor("twoDays", 2);
+          this._fetchDataFor("threeDays", 3);
+          this._fetchDataFor("fourDays", 4);
+          this._fetchDataFor("fiveDays", 5);
+          this._fetchDataForToday();
+
+          // Pusher.logToConsole = true;
+
+          // let pusher = new Pusher("94a8339d225401384224", {
+          //   cluster: "ap1",
+          //   encrypted: true
+          // });
+
+          // let channel = pusher.subscribe("price-updates");
+          // channel.bind("coin-updates", function(data) {
+          //   this.currentCurrency = {
+          //     BTC: data.coin.BTC.THB,
+          //     ETH: data.coin.ETH.THB,
+          //     EVX: data.coin.EVX.THB
+          //   };
+          // });
+        }
+      }, 5000);
       //console.log("update");
       //console.log(this.symbol);
-      if (!navigator.onLine) {
-        self.currentCurrency = {
-          BTC: localStorage.getItem("BTC"),
-          ETH: localStorage.getItem("ETH"),
-          EVX: localStorage.getItem("EVX")
-        };
-
-        self.previousCurrency = {
-          yesterday: JSON.parse(localStorage.getItem("yesterdayPrices")),
-          twoDays: JSON.parse(localStorage.getItem("twoDaysPrices")),
-          threeDays: JSON.parse(localStorage.getItem("threeDaysPrices")),
-          fourDays: JSON.parse(localStorage.getItem("fourDaysPrices")),
-          fiveDays: JSON.parse(localStorage.getItem("fiveDaysPrices"))
-        };
-      } else {
-        self._fetchDataFor("yesterday", 1);
-        self._fetchDataFor("twoDays", 2);
-        self._fetchDataFor("threeDays", 3);
-        self._fetchDataFor("fourDays", 4);
-        self._fetchDataFor("fiveDays", 5);
-        self._fetchDataForToday();
-
-        // Pusher.logToConsole = true;
-
-        // let pusher = new Pusher("94a8339d225401384224", {
-        //   cluster: "ap1",
-        //   encrypted: true
-        // });
-
-        // let channel = pusher.subscribe("price-updates");
-        // channel.bind("coin-updates", function(data) {
-        //   this.currentCurrency = {
-        //     BTC: data.coin.BTC.THB,
-        //     ETH: data.coin.ETH.THB,
-        //     EVX: data.coin.EVX.THB
-        //   };
-        // });
-      }
     },
     _switchSymbol: function(val) {
       if (val == "฿") {
@@ -165,10 +170,11 @@ export default {
   created() {
     // update from Interval
     this._fetchNewData();
-    //this.timer = setInterval(this._fetchNewData, 10000);
+    //console.log("created");
+    //this.timer = setInterval(this._fetchNewData, 5000);
   },
   beforeDestroy() {
-    clearInterval(this.timer);
+    //clearInterval(this.timer);
   }
 };
 </script>
@@ -290,7 +296,7 @@ header h2 {
 .btn-curr {
   font-weight: bold;
   color: rgb(25, 53, 123);
-  border: 1px solid rgb(25, 53, 123);;
+  border: 1px solid rgb(25, 53, 123);
   background-color: #fff;
   margin-right: 5px;
   padding: 5px;
@@ -315,5 +321,4 @@ header h2 {
 .text-footer {
   color: #39e965;
 }
-
 </style>
